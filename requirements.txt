@@ -1,0 +1,14 @@
+aiogram==3.2.0
+alembic==1.13.1
+asyncio==3.4.3
+asyncpg==0.29.0
+betterlogging==1.0.0
+dataclasses==0.6
+decorator==5.1.1
+environs==9.4.0
+psycopg2-binary==2.9.9
+pytz==2020.5
+redis==5.0.3
+SQLAlchemy==2.0.29
+aiosmtplib
+email-validator
