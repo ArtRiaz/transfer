@@ -116,3 +116,12 @@ class UserRepo(BaseRepo):
         await self.session.commit()
         return result.scalar_one_or_none()
 
+    async def count_users(self) -> list[tuple[int, str]]:
+        """
+        Возвращает список всех пользователей (их ID и username).
+        """
+        query = select(User.user_id, User.username)
+        result = await self.session.execute(query)
+        return [(row.user_id, row.username) for row in result.fetchall()]
+
+

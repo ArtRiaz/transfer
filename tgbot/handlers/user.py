@@ -23,15 +23,6 @@ caption_pre_sales = ("🚀 Exclusive Early Access – Join the Revolution! 🚀\
                      "of decentralized finance. This is your opportunity to be part of an innovative ecosystem that "
                      "offers "
                      "security, scalability, and seamless transactions.\n\n "
-                     "🔹 Why Invest in [Coin Name]\n"
-                     "✅ Advanced Blockchain Technology – Fast, secure, and cost-effective transactions.\n"
-                     "✅ Deflationary Mechanism – Limited supply with a smart burn system.\n"
-                     "✅ Strong Utility & Real-World Use Cases – Designed for DeFi, gaming, NFTs, and more.\n"
-                     "✅ Community-Driven & Transparent – Built for users, governed by the community.\n\n"
-                     "🔥 Pre-Sale Details:\n"
-                     "📌 Start Date: [Insert Date]\n"
-                     "📌 Token Price: [Insert Price]\n"
-                     "📌 Bonus for Early Investors: Up to [X]% extra tokens!\n\n"
                      "Join the movement and invest in the future with [Coin Name] today! 🌍💎")
 
 caption = "Get your money, insert your wallet."
