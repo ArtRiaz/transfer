@@ -72,7 +72,7 @@ async def main():
     config = load_config(".env")
     storage = MemoryStorage()
 
-    bot = Bot(token=config.tg_bot.token, parse_mode="HTML")
+    bot = Bot(token=config.tg_bot.token)
     dp = Dispatcher(storage=storage)
 
     engine = create_engine(config.db, echo=True)

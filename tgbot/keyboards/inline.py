@@ -3,30 +3,69 @@ from aiogram.types import WebAppInfo, InlineKeyboardMarkup, InlineKeyboardButton
 
 # Keyboards
 
-# New user
-def start_keyboard_user():
+
+def social_keyboard():
     ikb = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="📈 Join to Whitelist ", callback_data="register")],
-        [InlineKeyboardButton(text="🚀 About project ", callback_data="project")],
+        [InlineKeyboardButton(text="Telegram chat", url='https://t.me')],
+        [InlineKeyboardButton(text="Telegram channel", url='https://t.me')],
+        [InlineKeyboardButton(text="X", url='https://x.com')],
+        [InlineKeyboardButton(text="Website", url='https://example.com')],
+        [InlineKeyboardButton(text="◀️ Back Main Menu", callback_data="back")]
+    ])
+
+    return ikb
+
+
+def start_keyboard_after_date():
+    ikb = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="💲 Buy Token", callback_data="buy_token")],
+        [InlineKeyboardButton(text="🚻 Referral", callback_data="referral")],
+        [InlineKeyboardButton(text="🚀 About $ONI ", callback_data="project")],
         [InlineKeyboardButton(text="📲 Social", callback_data="social")]
     ]
     )
     return ikb
 
 
-def start_keyboard():
+def buy_token_keyboard(has_wallet: bool = False) -> InlineKeyboardMarkup:
+    """Создаёт клавиатуру с разными кнопками в зависимости от наличия приватного ключа"""
+
     ikb = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="Add wallet", callback_data="wallet")]
+        [
+            InlineKeyboardButton(
+                text="🔄 Change Wallet" if has_wallet else "💲 Connect your wallet",
+                callback_data="connect_wallet"
+            )
+        ],
+        [
+            InlineKeyboardButton(text="↔️ Wrap $SOL to $ONI", callback_data="exchange")
+        ],
+        [InlineKeyboardButton(text="◀️ Back Main Menu", callback_data="back")]
+    ])
+
+    return ikb
+
+
+def referral():
+    ikb = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="Your Statistic", callback_data="statistic")],
+        [InlineKeyboardButton(text="Create link", callback_data="link")],
+        [InlineKeyboardButton(text="◀️ Back Main Menu", callback_data="back")]
     ]
     )
     return ikb
 
 
-def social_keyboard():
+def claim():
     ikb = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="Telegram chat", url='https://t.me')],
-        [InlineKeyboardButton(text="Telegram channel", url='https://t.me')],
-        [InlineKeyboardButton(text="X", url='https://x.com')]
-    ])
+        [InlineKeyboardButton(text="Claim Bonus", callback_data="claim_bonus")],
+    [InlineKeyboardButton(text="◀️ Back Main Menu", callback_data="back")]]
+    )
+    return ikb
 
+
+def back():
+    ikb = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="◀️ Back Main Menu", callback_data="back")]]
+    )
     return ikb

@@ -101,3 +101,28 @@ async def process_broadcast_message(message: types.Message, state: FSMContext, r
 async def clear_users_command(message: types.Message, repo: RequestsRepo):
     await repo.users.clear_users()
     await message.answer("✅ All users have been deleted from the database.")
+
+
+@admin_router.message(Command("base"))
+async def show_database(message: types.Message, repo: RequestsRepo):
+    """Выводит всех пользователей из базы данных"""
+    users = await repo.users.get_all_users()
+
+    if not users:
+        await message.answer("📂 The database is empty.")
+        return
+
+    response = "📊 User Database:\n\n"
+    for user in users:
+        response += (
+            f"👤 ID: {user.user_id}\n"
+            f"📛 Name: {user.full_name}\n"
+            f"🔗 Username: @{user.username if user.username else 'N/A'}\n"
+            f"💰 Transactions: {'✅' if user.transactions else '❌'}\n"
+            f"💵 Total Amount: {user.amount_tx / 1_000_000_000:.9f} SOL\n"
+            f"🎁 Referral Bonus: {user.referral_bonus / 1_000_000_000:.9f} SOL\n"
+            f"👥 Referred Users: {user.refer}\n"
+            "------------------------\n"
+        )
+
+    await message.answer(response)
