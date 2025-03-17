@@ -90,8 +90,30 @@ async def buy_token(callback: types.CallbackQuery, repo: RequestsRepo):
 
     # Выбираем правильную клавиатуру
     keyboard = buy_token_keyboard(has_wallet=has_private_key)
-
-    await callback.message.answer("Buy token", reply_markup=keyboard)
+    text = "🔹 Buy ONICOIN at the Best Pre-Sale Price! 🔹\n\n" \
+           "Now is your chance to grab $ONICOIN at an exclusive pre-sale price and unlock your path to rewards and " \
+           "the Oni Game competition! 🎯\n\n" \
+           "🔥 Why Buy Now?\n" \
+           "✅ Pre-Sale Advantage – Get in early before public trading begins!\n" \
+           "✅ Earn Referral Bonuses – Invite friends and increase your rewards!\n" \
+           "✅ Chance to Win – Every purchase gives you access to the contest!\n\n" \
+           "💰 How to Buy ONICOIN?\n" \
+           "1️⃣ Connect Your Wallet – Use a Solana-compatible wallet like Phantom (https://phantom.com/) or Atomic " \
+           "Wallet (https://atomicwallet.io/).\n" \
+           "2️⃣ Wrap SOL to ONICOIN – Exchange your SOL for ONICOIN seamlessly.\n" \
+           "3️⃣ Confirm Your Purchase – Receive your ONICOIN and start participating! 🚀\n\n" \
+           "📊 Purchase Limits:\n" \
+           "🔹 Minimum purchase: 50 USDT worth of SOL\n" \
+           "🔹 Maximum purchase: 5000 USDT worth of SOL\n" \
+           "*️⃣ The equivalent in SOL is calculated at the current exchange rate.\n\n" \
+           "🛡 Your Security Matters\n" \
+           "We ensure secure transactions using your Solana wallet. Your private key is stored safely in your wallet " \
+           "and never shared with anyone.\n\n" \
+           "💡 Where is your private key stored?\n" \
+           "✅In your wallet’s secure settings (accessible only by you).\n" \
+           "✅NEVER share your private key! Keep it safe to protect your funds.\n\n" \
+           "🔗 Ready to own ONICOIN? Click Buy Token and step into the Chart Game ecosystem! 🎭🔥"
+    await callback.message.answer(text, reply_markup=keyboard)
     await callback.answer()
     await callback.message.delete()
 
@@ -158,7 +180,7 @@ class ExchangesState(StatesGroup):
 @user_router.callback_query(F.data == "exchange")
 async def ask_amount(callback: types.CallbackQuery, state: FSMContext):
     await state.set_state(ExchangesState.waiting_for_amount)
-    await callback.message.answer(f"Please enter amount to wrap from $SOL to $CG (1 SOL = 2313 CG):")
+    await callback.message.answer(f"Please enter amount to wrap from $SOL to $ONICOIN (1 SOL = 2313  ONICOIN):")
 
 
 # Функция проверки транзакции
@@ -189,7 +211,9 @@ async def check_transaction_status(tx_signature: str, message: types.Message, re
                 # ✅ Обновляем базу данных
                 await repo.users.update_transaction_data(user_id, amount_lamports)
 
-                await message.answer("✅ Transaction successfully confirmed!")
+                await message.answer(f"🎉 Success! Your ONICOIN is Here! 🎉\n"
+                                     f"💰 You’ve received: {amount_lamports} ONICOIN\n"
+                                     f"🔄 Exchange Completed! Your $SOL is now $ONICOIN, ready for action! 🚀")
             else:
                 await message.answer(f"❌ Error in transaction: {status.err}")
         else:
@@ -289,7 +313,15 @@ async def send_sol(message: types.Message, state: FSMContext, repo: RequestsRepo
 
 @user_router.callback_query(F.data == "referral")
 async def get_referral(callback: types.CallbackQuery):
-    await callback.message.answer_photo(photo=photo, caption="My referral system", reply_markup=referral())
+    text = "📢 Referral Program: Earn More with Your Friends! 📢\n\n" \
+           "Invite friends to join Game Chart and earn rewards in $ONICOIN for every participant! The more you " \
+           "invite, the bigger your bonus!\n" \
+           "🔹 How it works?\n" \
+           "- Invite up to 10 friends → Earn 8% in ONICOIN from their purchases\n" \
+           "- Invite more than 10 friends → Earn 15% in ONICOIN from each new participant\n\n" \
+           "Create your personal referral link and start earning now! 🎯\n\n" \
+           "🔥 Let’s grow the Oni Tribe together!"
+    await callback.message.answer_photo(photo=photo, caption=text, reply_markup=referral())
 
 
 @user_router.callback_query(F.data == "statistic")
@@ -299,8 +331,9 @@ async def statistics(callback: types.CallbackQuery, repo: RequestsRepo):
     # ✅ Получаем сумму накопленных бонусов
     user = await repo.users.get_user_by_id(user_id)
     bonuses = user.referral_bonus if user else 0  # Если пользователя нет, бонусы = 0
-    await callback.message.answer(f"Friends {friendship}\n\n"
-                                  f"Bonuses {bonuses} ONI token", reply_markup=claim())
+    await callback.message.answer(f"🔥 Your Referral Stats! 🔥\n\n"
+                                  f"👥 Invited Friends:  {friendship}\n\n"
+                                  f"💰 Earned Bonuses:  {bonuses} ", reply_markup=claim())
 
 
 @user_router.callback_query(F.data == "link")

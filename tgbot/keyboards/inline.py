@@ -19,7 +19,7 @@ def social_keyboard():
 def start_keyboard_after_date():
     ikb = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="💲 Buy Token", callback_data="buy_token")],
-        [InlineKeyboardButton(text="🚻 Referral", callback_data="referral")],
+        [InlineKeyboardButton(text="🚻 Invite a Friends", callback_data="referral")],
         [InlineKeyboardButton(text="🚀 About $ONI ", callback_data="project")],
         [InlineKeyboardButton(text="📲 Social", callback_data="social")]
     ]
@@ -48,7 +48,7 @@ def buy_token_keyboard(has_wallet: bool = False) -> InlineKeyboardMarkup:
 
 def referral():
     ikb = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="Your Statistic", callback_data="statistic")],
+        [InlineKeyboardButton(text="Statistic", callback_data="statistic")],
         [InlineKeyboardButton(text="Create link", callback_data="link")],
         [InlineKeyboardButton(text="◀️ Back Main Menu", callback_data="back")]
     ]

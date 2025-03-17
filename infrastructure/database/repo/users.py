@@ -171,7 +171,14 @@ class UserRepo(BaseRepo):
 
         # ✅ Начисляем бонус только если это первая транзакция реферала
         if not user_had_transactions:
-            referral_bonus = int(amount * 0.08)  # 8% бонуса
+            # referral_bonus = int(amount * 0.08)  # 8% бонуса
+            referral_count_query = select(func.count()).where(User.referral_id == referral_id)
+            referral_count_result = await self.session.execute(referral_count_query)
+            referral_count = referral_count_result.scalar() or 0
+
+            # Определяем процент бонуса
+            bonus_percentage = 0.15 if referral_count > 10 else 0.08
+            referral_bonus = int(amount * bonus_percentage)
 
             # ✅ Обновляем `referral_bonus`
             bonus_update_stmt = (
