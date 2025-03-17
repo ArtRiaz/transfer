@@ -1,6 +1,8 @@
 from typing import Callable, Dict, Any, Awaitable
+
 from aiogram import BaseMiddleware
-from aiogram.types import Update
+from aiogram.types import Message, Update
+
 from infrastructure.database.repo.requests import RequestsRepo
 
 
@@ -10,25 +12,23 @@ class DatabaseMiddleware(BaseMiddleware):
 
     async def __call__(
             self,
-            handler: Callable[[Update, Dict[str, Any]], Awaitable[Any]],
+            handler: Callable[[Message, Dict[str, Any]], Awaitable[Any]],
             event: Update,
             data: Dict[str, Any],
     ) -> Any:
         async with self.session_pool() as session:
             repo = RequestsRepo(session)
-            event_from_user = data.get("event_from_user")
+            event_from_user = data.get('event_from_user')
 
-            # Проверяем, есть ли пользователь в базе
-            user = await repo.users.is_user_exists(event_from_user.id)
-
-            if user:
-                # Если пользователь найден, получаем его данные
-                data["user"] = await repo.users.get_user_by_id(event_from_user.id)
-            else:
-                # Если пользователя нет, передаем None
-                data["user"] = None
+            user = await repo.users.get_or_create_user(
+                event_from_user.id,
+                event_from_user.full_name,
+                event_from_user.language_code,
+                event_from_user.username,
+            )
 
             data["repo"] = repo
+            data["user"] = user
 
             result = await handler(event, data)
         return result

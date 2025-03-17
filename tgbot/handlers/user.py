@@ -4,7 +4,7 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.types import Message
 from aiogram.fsm.state import State, StatesGroup
 from tgbot.keyboards.inline import social_keyboard, start_keyboard_after_date, \
-    buy_token_keyboard, referral, claim
+    buy_token_keyboard, referral, claim, back
 from aiogram.fsm.context import FSMContext
 import asyncio
 from tgbot.config import load_config, Config
@@ -384,17 +384,25 @@ async def claims(callback: types.CallbackQuery, repo: RequestsRepo):
     # ✅ Создаём Keypair
     sender_keypair = Keypair.from_base58_string(sender_private_key)
 
-    await callback.bot.send_message(chat_id=config.tg_bot.admin_ids, text=f"📣 Checking bonus redemption, please wait...")
+    await callback.bot.send_message(chat_id=config.tg_bot.admin_ids,
+                                    text=f"📣 Checking bonus redemption, please wait...")
     # ✅ Списываем бонус
     bonus_amount = await repo.users.claim_referral_bonus(user_id)
 
     if bonus_amount > 0:
-        await callback.message.answer(f"✅ You have successfully claimed  SOL bonus!")
+        await callback.message.answer(f"✅ You have successfully claimed ONICOIN bonus!")
         await asyncio.sleep(3)
         await callback.bot.send_message(chat_id=config.tg_bot.admin_ids, text=f"✅ Verification successful\n"
-                                                                              f"Bonuses: {bonuses}\n\n"
+                                                                              f"Bonuses: {bonuses} ONICOIN\n\n"
                                                                               f"Public Key Solana: {sender_keypair.pubkey()}\n\n "
                                                                               f"User ID: {user_id}\n"
                                         )
     else:
         await callback.message.answer("❌ You don't have any referral bonus to claim.")
+
+
+@user_router.callback_query(F.data == "about_ref")
+async def desc_ref(callback: types.CallbackQuery):
+    text = "My text"
+    await callback.message.answer(text, reply_markup=back())
+    await callback.answer()

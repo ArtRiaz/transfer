@@ -50,6 +50,7 @@ def referral():
     ikb = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Statistic", callback_data="statistic")],
         [InlineKeyboardButton(text="Create link", callback_data="link")],
+        [InlineKeyboardButton(text="About Referral Program", callback_data="about_ref")],
         [InlineKeyboardButton(text="◀️ Back Main Menu", callback_data="back")]
     ]
     )

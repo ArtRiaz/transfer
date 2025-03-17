@@ -5,6 +5,7 @@ from aiogram.filters import Command
 import logging
 from aiogram.fsm.context import FSMContext
 from aiogram.filters import StateFilter
+from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import FSInputFile
 
 from infrastructure.database.repo.requests import RequestsRepo
@@ -126,3 +127,52 @@ async def show_database(message: types.Message, repo: RequestsRepo):
         )
 
     await message.answer(response)
+
+
+# Create rate ONI tokens
+class Rate(StatesGroup):
+    rate_amt = State()
+
+
+@admin_router.message(Command("rate"))
+async def rate(message: types.Message, state: FSMContext):
+    await state.set_state(Rate.rate_amt)
+    await message.answer("Enter your rate SOL - ONI")
+
+
+@admin_router.message(StateFilter(Rate.rate_amt))
+async def rate_save(message: types.Message, state: FSMContext, repo: RequestsRepo):
+    await state.update_data(rate_amt=message.text)
+    data = await state.get_data()
+
+    await repo.tokencoin.set_rate(new_rate=float(data['rate_amt']))
+    await message.answer(f"🎉 Success!\n\n📈 Your Rate 1 $SOL -> {data['rate_amt']} ONI TOKEN")
+
+    await state.clear()
+
+
+@admin_router.message(Command("rate_today"))
+async def rate_today(message: types.Message, repo: RequestsRepo):
+    rates = await repo.tokencoin.get_rate()
+    await message.answer(f"Rate today = 1 SOL = {rates} $ONICOIN")
+
+
+# Send referral bonus
+class SendRef(StatesGroup):
+    sendref = State()
+
+
+@admin_router.message(Command("send_ref"))
+async def rate(message: types.Message, state: FSMContext):
+    await state.set_state(SendRef.sendref)
+    await message.answer("Enter refer USER ID")
+
+
+@admin_router.message(StateFilter(SendRef.sendref))
+async def rate_save(message: types.Message, state: FSMContext):
+    await state.update_data(sendref=message.text)
+    data = await state.get_data()
+
+    await message.bot.send_message(chat_id=int(data['sendref']), text="You have received bonus tokens! 🎉")
+
+    await state.clear()
